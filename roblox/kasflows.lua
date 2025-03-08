@@ -5,7 +5,29 @@
     Легковесная система коммуникации для Roblox как альтернатива WebSocket
 ]]
 
-local HttpService = game:GetService("HttpService")
+local requestFunc = (syn and syn.request) or (http and http.request) or (request) or (fluxus and fluxus.request)
+if not requestFunc then
+    error("Ваш эксплойт не поддерживает HTTP-запросы.")
+end
+
+local function httpPost(url, data)
+    local response = requestFunc({
+        Url = url,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"},
+        Body = game:GetService("HttpService"):JSONEncode(data)
+    })
+    return response.Body
+end
+
+local function httpGet(url)
+    local response = requestFunc({
+        Url = url,
+        Method = "GET"
+    })
+    return response.Body
+end
+
 
 local KasflowsClient = {}
 KasflowsClient.__index = KasflowsClient
@@ -27,7 +49,7 @@ function KasflowsClient:connect(name)
     self.name = name
     
     local success, response = pcall(function()
-        return HttpService:PostAsync(
+        return game:HttpPost(
             self.url .. "/statusws",
             HttpService:JSONEncode({name = name}),
             Enum.HttpContentType.ApplicationJson
@@ -66,7 +88,7 @@ function KasflowsClient:disconnect()
     self:stopCheckMessages()
     
     local success, response = pcall(function()
-        return HttpService:PostAsync(
+        return game:HttpPost(
             self.url .. "/disconnect",
             HttpService:JSONEncode({name = self.name, token = self.token}),
             Enum.HttpContentType.ApplicationJson
@@ -99,7 +121,7 @@ function KasflowsClient:startPing()
             wait(5) -- Пинг каждые 5 секунд
             
             pcall(function()
-                HttpService:PostAsync(
+                game:HttpPost(
                     self.url .. "/statusws",
                     HttpService:JSONEncode({name = self.name}),
                     Enum.HttpContentType.ApplicationJson
@@ -131,7 +153,7 @@ function KasflowsClient:emit(event, data)
     data.token = self.token
     
     local success, response = pcall(function()
-        return HttpService:PostAsync(
+        return game:HttpPost(
             self.url .. "/sendmessage",
             HttpService:JSONEncode({
                 event = event,
@@ -156,7 +178,7 @@ function KasflowsClient:checkMessages()
     end
     
     local success, response = pcall(function()
-        return HttpService:PostAsync(
+        return game:HttpPost(
             self.url .. "/getmessage",
             HttpService:JSONEncode({name = self.name, token = self.token}),
             Enum.HttpContentType.ApplicationJson
@@ -199,7 +221,7 @@ end
 -- Получение списка подключенных клиентов
 function KasflowsClient:getClients()
     local success, response = pcall(function()
-        return HttpService:GetAsync(self.url .. "/getclients")
+        return game:HttpGet(self.url .. "/getclients")
     end)
     
     if success then
@@ -223,7 +245,7 @@ function KasflowsClient:sendToClient(clientName, message)
     }
     
     local success, response = pcall(function()
-        return HttpService:PostAsync(
+        return game:HttpPost(
             self.url .. "/sendmessagetoclient",
             HttpService:JSONEncode(payload),
             Enum.HttpContentType.ApplicationJson
