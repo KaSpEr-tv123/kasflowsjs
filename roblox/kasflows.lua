@@ -5,9 +5,10 @@
     Легковесная система коммуникации для Roblox как альтернатива WebSocket
 ]]
 
+local HttpService = game:GetService("HttpService")
 local requestFunc = (syn and syn.request) or (http and http.request) or (request) or (fluxus and fluxus.request)
 if not requestFunc then
-    error("Ваш эксплойт не поддерживает HTTP-запросы.")
+    error("Ваш режим или среда не поддерживает HTTP запросы")
 end
 
 local function httpPost(url, data)
@@ -15,7 +16,7 @@ local function httpPost(url, data)
         Url = url,
         Method = "POST",
         Headers = {["Content-Type"] = "application/json"},
-        Body = game:GetService("HttpService"):JSONEncode(data)
+        Body = HttpService:JSONEncode(data)
     })
     return response.Body
 end
@@ -28,7 +29,6 @@ local function httpGet(url)
     return response.Body
 end
 
-
 local KasflowsClient = {}
 KasflowsClient.__index = KasflowsClient
 
@@ -40,6 +40,7 @@ function KasflowsClient.new(url)
     self.connected = false
     self.eventsCallbacks = {}
     self.pingThread = nil
+    self.checkMessagesThread = nil
     self.token = nil
     return self
 end
@@ -49,10 +50,9 @@ function KasflowsClient:connect(name)
     self.name = name
     
     local success, response = pcall(function()
-        return game:HttpPost(
+        return httpPost(
             self.url .. "/statusws",
-            HttpService:JSONEncode({name = name}),
-            Enum.HttpContentType.ApplicationJson
+            {name = name}
         )
     end)
     
@@ -88,10 +88,9 @@ function KasflowsClient:disconnect()
     self:stopCheckMessages()
     
     local success, response = pcall(function()
-        return game:HttpPost(
+        return httpPost(
             self.url .. "/disconnect",
-            HttpService:JSONEncode({name = self.name, token = self.token}),
-            Enum.HttpContentType.ApplicationJson
+            {name = self.name, token = self.token}
         )
     end)
     
@@ -121,14 +120,43 @@ function KasflowsClient:startPing()
             wait(5) -- Пинг каждые 5 секунд
             
             pcall(function()
-                game:HttpPost(
+                httpPost(
                     self.url .. "/statusws",
-                    HttpService:JSONEncode({name = self.name}),
-                    Enum.HttpContentType.ApplicationJson
+                    {name = self.name, token = self.token}
                 )
             end)
         end
     end)
+end
+
+-- Остановка пинга
+function KasflowsClient:stopPing()
+    if self.pingThread then
+        self.pingThread:Disconnect()
+        self.pingThread = nil
+    end
+end
+
+-- Запуск проверки сообщений
+function KasflowsClient:startCheckMessages()
+    if self.checkMessagesThread then
+        self.checkMessagesThread:Disconnect()
+    end
+    
+    self.checkMessagesThread = spawn(function()
+        while self.connected do
+            wait(1) -- Проверка каждую секунду
+            self:checkMessages()
+        end
+    end)
+end
+
+-- Остановка проверки сообщений
+function KasflowsClient:stopCheckMessages()
+    if self.checkMessagesThread then
+        self.checkMessagesThread:Disconnect()
+        self.checkMessagesThread = nil
+    end
 end
 
 -- Подписка на событие
@@ -150,16 +178,16 @@ function KasflowsClient:emit(event, data)
         return {status = "not connected"}
     end
     
+    data = data or {}
     data.token = self.token
     
     local success, response = pcall(function()
-        return game:HttpPost(
+        return httpPost(
             self.url .. "/sendmessage",
-            HttpService:JSONEncode({
+            {
                 event = event,
                 data = data
-            }),
-            Enum.HttpContentType.ApplicationJson
+            }
         )
     end)
     
@@ -178,10 +206,9 @@ function KasflowsClient:checkMessages()
     end
     
     local success, response = pcall(function()
-        return game:HttpPost(
+        return httpPost(
             self.url .. "/getmessage",
-            HttpService:JSONEncode({name = self.name, token = self.token}),
-            Enum.HttpContentType.ApplicationJson
+            {name = self.name, token = self.token}
         )
     end)
     
@@ -204,24 +231,10 @@ function KasflowsClient:checkMessages()
     end
 end
 
--- Автоматическая проверка сообщений
-function KasflowsClient:startAutoCheck(interval)
-    interval = interval or 1 -- По умолчанию проверяем каждую секунду
-    
-    spawn(function()
-        while self.connected do
-            wait(interval)
-            self:checkMessages()
-        end
-    end)
-    
-    return self
-end
-
 -- Получение списка подключенных клиентов
 function KasflowsClient:getClients()
     local success, response = pcall(function()
-        return game:HttpGet(self.url .. "/getclients")
+        return httpGet(self.url .. "/getclients")
     end)
     
     if success then
@@ -241,14 +254,14 @@ function KasflowsClient:sendToClient(clientName, message)
     
     local payload = {
         name = clientName,
-        message = message
+        message = message,
+        token = self.token
     }
     
     local success, response = pcall(function()
-        return game:HttpPost(
+        return httpPost(
             self.url .. "/sendmessagetoclient",
-            HttpService:JSONEncode(payload),
-            Enum.HttpContentType.ApplicationJson
+            payload
         )
     end)
     
