@@ -145,7 +145,7 @@ function KasflowsClient:startCheckMessages()
     
     self.checkMessagesThread = spawn(function()
         while self.connected do
-            wait(1) -- Проверка каждую секунду
+            wait() -- Проверка каждую секунду
             self:checkMessages()
         end
     end)
