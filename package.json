@@ -1,6 +1,6 @@
 {
   "name": "kasflowsjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight communication system for client-server applications, especially designed for Roblox. Documentation available in English and Russian.",
   "main": "index.js",
   "types": "index.d.ts",
