@@ -1,4 +1,14 @@
-# KasFlows
+# KasFlowsJS
+
+A lightweight communication system for client-server applications, especially designed for Roblox.
+
+[![npm version](https://img.shields.io/npm/v/kasflowsjs.svg)](https://www.npmjs.com/package/kasflowsjs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[![EN](https://img.shields.io/badge/lang-EN-blue.svg)](README.md)
+[![RU](https://img.shields.io/badge/lang-RU-red.svg)](README.ru.md)
+
+## Features
 
 KasFlows is a lightweight communication system specifically designed for Roblox scripts as an alternative to WebSocket. It provides a simple and flexible way to handle client-server communication through an API server.
 

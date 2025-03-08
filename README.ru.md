@@ -2,6 +2,14 @@
 
 KasFlows - это легковесная система коммуникации, специально разработанная для Roblox скриптов как альтернатива WebSocket. Она предоставляет простой и гибкий способ обработки клиент-серверной коммуникации через API сервер.
 
+[![npm version](https://img.shields.io/npm/v/kasflowsjs.svg)](https://www.npmjs.com/package/kasflowsjs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[![EN](https://img.shields.io/badge/lang-EN-blue.svg)](README.md)
+[![RU](https://img.shields.io/badge/lang-RU-red.svg)](README.ru.md)
+
+[English Documentation (Английская версия документации)](README.md)
+
 ## Установка
 
 ```bash

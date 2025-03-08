@@ -1,7 +1,7 @@
 {
   "name": "kasflowsjs",
   "version": "1.0.0",
-  "description": "A lightweight communication system for client-server applications, especially designed for Roblox",
+  "description": "A lightweight communication system for client-server applications, especially designed for Roblox. Documentation available in English and Russian.",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -45,6 +45,7 @@
     "logger.js",
     "roblox/kasflows.lua",
     "README.md",
+    "README.ru.md",
     "LICENSE"
   ]
 } 
