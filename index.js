@@ -286,5 +286,6 @@ module.exports = {
     Client,
     Server,
     Kasflows,
-    VERSION
+    VERSION,
+    logger
 };

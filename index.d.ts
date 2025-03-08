@@ -49,10 +49,10 @@ declare module 'kasflowsjs' {
     warn(message: string, ...args: any[]): void;
     error(message: string, ...args: any[]): void;
     LOG_LEVELS: {
-      DEBUG: string;
-      INFO: string;
-      WARN: string;
-      ERROR: string;
+      DEBUG: number;
+      INFO: number;
+      WARN: number;
+      ERROR: number;
     };
   };
 } 
