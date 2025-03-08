@@ -1,0 +1,39 @@
+{
+  "name": "kasflowsjs",
+  "version": "1.0.0",
+  "description": "A lightweight communication system for client-server applications, especially designed for Roblox",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node examples/server.js"
+  },
+  "keywords": [
+    "websocket",
+    "alternative",
+    "roblox",
+    "communication",
+    "client-server",
+    "api"
+  ],
+  "author": "kasperenok",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KaSpEr-tv123/kasflowsjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KaSpEr-tv123/kasflowsjs/issues"
+  },
+  "homepage": "https://github.com/KaSpEr-tv123/kasflowsjs#readme",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+} 

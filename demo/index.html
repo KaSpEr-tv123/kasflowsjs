@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KasFlows Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>KasFlows Demo</h1>
+        
+        <div class="connection-panel">
+            <input type="text" id="server-url" value="http://localhost:8000" placeholder="URL сервера">
+            <input type="text" id="client-name" value="web-client" placeholder="Имя клиента">
+            <button id="connect-btn">Подключиться</button>
+            <button id="disconnect-btn" disabled>Отключиться</button>
+        </div>
+        
+        <div class="message-panel">
+            <div class="message-input">
+                <input type="text" id="event-name" value="message" placeholder="Имя события">
+                <textarea id="message-data" placeholder="Данные сообщения (JSON)">{"sender":"web-client","message":"Привет от веб-клиента!"}</textarea>
+                <button id="send-btn" disabled>Отправить</button>
+            </div>
+            
+            <div class="message-output">
+                <h3>Лог сообщений</h3>
+                <div id="message-log"></div>
+                <button id="clear-log-btn">Очистить лог</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
