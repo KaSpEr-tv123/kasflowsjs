@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A lightweight communication system for client-server applications, especially designed for Roblox",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "jest",
     "start": "node examples/server.js"
@@ -13,7 +14,9 @@
     "roblox",
     "communication",
     "client-server",
-    "api"
+    "api",
+    "http-polling",
+    "game-server"
   ],
   "author": "kasperenok",
   "license": "MIT",
@@ -35,5 +38,13 @@
   "homepage": "https://github.com/KaSpEr-tv123/kasflowsjs#readme",
   "engines": {
     "node": ">=12.0.0"
-  }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "logger.js",
+    "roblox/kasflows.lua",
+    "README.md",
+    "LICENSE"
+  ]
 } 
