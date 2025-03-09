@@ -145,7 +145,7 @@ function KasflowsClient:startCheckMessages()
     
     self.checkMessagesThread = spawn(function()
         while self.connected do
-            wait() -- Проверка каждую секунду
+            wait(0)
             self:checkMessages()
         end
     end)
@@ -180,6 +180,7 @@ function KasflowsClient:emit(event, data)
     
     data = data or {}
     data.token = self.token
+    data.sender = self.name
     
     local success, response = pcall(function()
         return httpPost(
@@ -246,7 +247,7 @@ function KasflowsClient:getClients()
 end
 
 -- Отправка сообщения конкретному клиенту
-function KasflowsClient:sendToClient(clientName, message)
+function KasflowsClient:sendToClient(clientName, event, data)
     if not self.connected then
         warn("KasFlows: Cannot send to client - not connected")
         return {status = "not connected"}
@@ -254,7 +255,10 @@ function KasflowsClient:sendToClient(clientName, message)
     
     local payload = {
         name = clientName,
-        message = message,
+        message = {
+            event = event,
+            data = data
+        },
         token = self.token
     }
     
