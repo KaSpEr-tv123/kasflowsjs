@@ -214,14 +214,30 @@ function KasflowsClient:checkMessages()
     end)
     
     if success then
-        local data = HttpService:JSONDecode(response)
+        local decodeSuccess, data = pcall(function()
+            return HttpService:JSONDecode(response)
+        end)
+        
+        if not decodeSuccess then
+            warn("KasFlows: Failed to decode message - " .. data)
+            return {status = "error", message = "JSON decode error: " .. data}
+        end
         
         if data.status == "success" and data.message then
             local message = data.message
             if message.event and self.eventsCallbacks[message.event] then
-                spawn(function()
+                local callbackSuccess, callbackError = pcall(function()
                     self.eventsCallbacks[message.event](message.data)
                 end)
+                
+                if not callbackSuccess then
+                    warn("KasFlows: Event callback error - " .. callbackError)
+                    pcall(function()
+                        self:emit("errorlua", {
+                            error = callbackError
+                        })
+                    end)
+                end
             end
         end
         
