@@ -67,6 +67,9 @@ function KasflowsClient:connect(name)
             self:startCheckMessages()
             
             print("KasFlows: Connected to server as " .. name)
+            if self.eventsCallbacks["connect"] then
+                self.eventsCallbacks["connect"]()
+            end
             return data
         else
             warn("KasFlows: Failed to connect - " .. data.status)
@@ -81,6 +84,9 @@ end
 -- Отключение от сервера
 function KasflowsClient:disconnect()
     if not self.connected then
+        if self.eventsCallbacks["disconnect"] then
+            self.eventsCallbacks["disconnect"]()
+        end
         return {status = "not connected"}
     end
     
