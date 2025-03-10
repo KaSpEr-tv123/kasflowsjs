@@ -151,8 +151,10 @@ function KasflowsClient:startCheckMessages()
     
     self.checkMessagesThread = spawn(function()
         while self.connected do
-            wait(0)
-            self:checkMessages()
+            wait()
+            pcall(function()
+                self:checkMessages()
+            end)
         end
     end)
 end
